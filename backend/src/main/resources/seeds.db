@@ -1,62 +1,62 @@
--- USUARIO
-INSERT INTO usuario (login, senha) VALUES 
+-- USER
+INSERT INTO user (username, password) VALUES
 ('admin', '123'),
 ('joao', '123'),
 ('maria', '123'),
 ('ana', '123'),
 ('carlos', '123');
 
--- TURMA
-INSERT INTO turma (nome) VALUES 
-('Turma A'),
-('Turma B'),
-('Turma C'),
-('Turma D'),
-('Turma E');
+-- CLASSROOM
+INSERT INTO classroom (name) VALUES
+('Classe A'),
+('Classe B'),
+('Classe C'),
+('Classe D'),
+('Classe E');
 
--- ALUNO
-INSERT INTO aluno (nome, turma_id) VALUES 
+-- STUDENT
+INSERT INTO student (name, classroom_id) VALUES
 ('Pedro', 1),
 ('Lucas', 2),
 ('Marcos', 3),
 ('Julia', 4),
 ('Fernanda', 5);
 
--- DISCIPLINA
-INSERT INTO disciplina (nome) VALUES 
-('Matemática'),
-('Português'),
-('História'),
+-- SUBJECT
+INSERT INTO subject (name) VALUES
+('Matematica'),
+('POrtugues'),
+('Historia'),
 ('Geografia'),
-('Física');
+('Fisica');
 
--- AVALIACAO
-INSERT INTO avaliacao (nome, peso, disciplina_id) VALUES 
-('Prova 1', 2.0, 1),
-('Prova 2', 3.0, 2),
+-- EVALUATION
+INSERT INTO evaluation (name, weight, subject_id) VALUES
+('Test 1', 2.0, 1),
+('Test 2', 3.0, 2),
 ('Trabalho', 1.5, 3),
-('Seminário', 1.0, 4),
+('Seminario', 1.0, 4),
 ('Projeto', 2.5, 5);
 
--- NOTA
-INSERT INTO nota (aluno_id, avaliacao_id, valor) VALUES 
+-- GRADE
+INSERT INTO grade (student_id, evaluation_id, value) VALUES
 (1, 1, 7.5),
 (2, 2, 8.0),
 (3, 3, 6.5),
 (4, 4, 9.0),
 (5, 5, 7.0);
 
--- USUARIO_R_TURMA
-INSERT INTO usuario_r_turma (usuario_id, turma_id, ativo) VALUES 
+-- USER_CLASSROOM
+INSERT INTO user_classroom (user_id, classroom_id, active) VALUES
 (1, 1, TRUE),
 (2, 2, TRUE),
 (3, 3, TRUE),
 (4, 4, FALSE),
 (5, 5, TRUE);
 
--- AUDITORIA_NOTA (opcional - normalmente trigger preenche)
-INSERT INTO auditoria_nota 
-(aluno_id, avaliacao_id, alterado, valor_antigo, valor_novo, alteracao) VALUES 
+-- GRADE_AUDIT (optional - normally trigger fills)
+INSERT INTO grade_audit
+(student_id, evaluation_id, modified_by, old_value, new_value, modification_date) VALUES
 (1, 1, 1, 6.0, 7.5, CURRENT_TIMESTAMP),
 (2, 2, 2, 7.0, 8.0, CURRENT_TIMESTAMP),
 (3, 3, 3, 5.5, 6.5, CURRENT_TIMESTAMP),

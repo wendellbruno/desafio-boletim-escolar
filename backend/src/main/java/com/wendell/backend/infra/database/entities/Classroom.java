@@ -12,19 +12,19 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "turma")
-public class Turma {
+@Table(name = "classroom")
+public class Classroom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
 
-    @OneToMany(mappedBy = "turma")
-    private List<Aluno> alunos;
+    @OneToMany(mappedBy = "classroom")
+    private List<Student> students;
 
-    @OneToMany(mappedBy = "turma")
-    private List<UsuarioRTurma> usuarioRTurmas;
+    @OneToMany(mappedBy = "classroom")
+    private List<UserClassroom> userClassrooms;
 
 }

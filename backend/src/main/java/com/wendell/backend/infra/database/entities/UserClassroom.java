@@ -9,25 +9,23 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Entity
 @Data
-@Table(name = "nota")
-public class Nota {
+@Table(name = "user_classroom")
+public class UserClassroom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal valor;
+    private Boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "aluno_id")
-    private Aluno aluno;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name = "avaliacao_id")
-    private Avaliacao avaliacao;
+    @JoinColumn(name = "classroom_id")
+    private Classroom classroom;
 
 }

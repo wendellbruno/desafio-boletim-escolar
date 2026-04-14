@@ -1,71 +1,71 @@
-CREATE TABLE usuario (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  login VARCHAR(255) NOT NULL,
-  senha VARCHAR(255) NOT NULL
+CREATE TABLE USERS (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE turma (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL
+CREATE TABLE CLASSROOM (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE aluno (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  turma_id BIGINT,
-  CONSTRAINT fk_aluno_turma FOREIGN KEY (turma_id) REFERENCES turma(id)
+CREATE TABLE STUDENT (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  classroom_id BIGINT,
+  CONSTRAINT fk_student_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id)
 );
 
-CREATE TABLE disciplina (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL
+CREATE TABLE SUBJECT (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE avaliacao (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  peso DECIMAL(10,2) NOT NULL,
-  disciplina_id BIGINT,
-  CONSTRAINT fk_avaliacao_disciplina FOREIGN KEY (disciplina_id) REFERENCES disciplina(id)
+CREATE TABLE EVALUATION (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  weight DECIMAL(10,2) NOT NULL,
+  subject_id BIGINT,
+  CONSTRAINT fk_evaluation_subject FOREIGN KEY (subject_id) REFERENCES subject(id)
 );
 
 
-CREATE TABLE nota (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  aluno_id BIGINT,
-  avaliacao_id BIGINT,
-  valor DECIMAL(10,2) NOT NULL,
-  CONSTRAINT fk_nota_aluno FOREIGN KEY (aluno_id) REFERENCES aluno(id),
-  CONSTRAINT fk_nota_avaliacao FOREIGN KEY (avaliacao_id) REFERENCES avaliacao(id)
+CREATE TABLE GRADE (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  student_id BIGINT,
+  evaluation_id BIGINT,
+  value DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_grade_student FOREIGN KEY (student_id) REFERENCES student(id),
+  CONSTRAINT fk_grade_evaluation FOREIGN KEY (evaluation_id) REFERENCES evaluation(id)
 );
 
-ALTER TABLE nota
-ADD CONSTRAINT unique_aluno_avaliacao
-UNIQUE (aluno_id, avaliacao_id);
+ALTER TABLE GRADE
+ADD CONSTRAINT unique_student_evaluation
+UNIQUE (student_id, evaluation_id);
 
-CREATE TABLE usuario_r_turma (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  usuario_id BIGINT,
-  turma_id BIGINT,
-  ativo BOOLEAN NOT NULL,
-  CONSTRAINT fk_usuario_turma_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id),
-  CONSTRAINT fk_usuario_turma_turma FOREIGN KEY (turma_id) REFERENCES turma(id)
+CREATE TABLE USER_CLASSROOM (
+  id BIGINT AUTO_INCREMENT  PRIMARY KEY,
+  user_id BIGINT,
+  classroom_id BIGINT,
+  active BOOLEAN NOT NULL,
+  CONSTRAINT fk_user_classroom_user FOREIGN KEY (user_id) REFERENCES users(id),
+  CONSTRAINT fk_user_classroom_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id)
 );
 
-CREATE TABLE auditoria_nota (
+CREATE TABLE grade_audit (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  aluno_id BIGINT,
-  avaliacao_id BIGINT,
-  alterado BIGINT,
-  valor_antigo DECIMAL(10,2) NOT NULL,
-  valor_novo DECIMAL(10,2) NOT NULL,
-  alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_auditoria_aluno FOREIGN KEY (aluno_id) REFERENCES aluno(id),
-  CONSTRAINT fk_auditoria_avaliacao FOREIGN KEY (avaliacao_id) REFERENCES avaliacao(id),
-  CONSTRAINT fk_auditoria_usuario FOREIGN KEY (alterado) REFERENCES usuario(id)
+  student_id BIGINT,
+  evaluation_id BIGINT,
+  modified_by BIGINT,
+  old_value DECIMAL(10,2) NOT NULL,
+  new_value DECIMAL(10,2) NOT NULL,
+  modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_audit_student FOREIGN KEY (student_id) REFERENCES student(id),
+  CONSTRAINT fk_audit_evaluation FOREIGN KEY (evaluation_id) REFERENCES evaluation(id),
+  CONSTRAINT fk_audit_user FOREIGN KEY (modified_by) REFERENCES users(id)
 );
 
 CREATE TRIGGER trg_auditoria_nota
-AFTER UPDATE ON nota
+AFTER UPDATE ON grade
 FOR EACH ROW
 CALL "AuditoriaNotaTrigger";

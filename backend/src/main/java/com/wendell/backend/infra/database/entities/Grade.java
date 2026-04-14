@@ -8,31 +8,26 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "auditoria_nota")
-public class AuditoriaNota {
+@Table(name = "grade")
+public class Grade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "aluno_id")
-    private Aluno aluno;
+    private BigDecimal value;
 
     @ManyToOne
-    @JoinColumn(name = "avaliacao_id")
-    private Avaliacao avaliacao;
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "alterado")
-    private Usuario alterado;
+    @JoinColumn(name = "evaluation_id")
+    private Evaluation evaluation;
 
-    private BigDecimal valorAntigo;
-    private BigDecimal valorNovo;
-    private LocalDateTime alteracao;
 }

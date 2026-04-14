@@ -4,8 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -14,23 +12,16 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "aluno")
-public class Aluno {
+@Table(name = "subject")
+public class Subject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "turma_id")
-    private Turma turma;
-
-    @OneToMany(mappedBy = "aluno")
-    private List<Nota> notas;
-
-    @OneToMany(mappedBy = "aluno")
-    private List<AuditoriaNota> auditorias;
+    @OneToMany(mappedBy = "subject")
+    private List<Evaluation> evaluations;
 
 }

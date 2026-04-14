@@ -15,24 +15,24 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "avaliacao")
-public class Avaliacao {
+@Table(name = "evaluation")
+public class Evaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
-    private BigDecimal peso;
+    private String name;
+    private BigDecimal weight;
 
     @ManyToOne
-    @JoinColumn(name = "disciplina_id")
-    private Disciplina disciplina;
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
 
-    @OneToMany(mappedBy = "avaliacao")
-    private List<Nota> notas;
+    @OneToMany(mappedBy = "evaluation")
+    private List<Grade> grades;
 
-    @OneToMany(mappedBy = "avaliacao")
-    private List<AuditoriaNota> auditorias;
+    @OneToMany(mappedBy = "evaluation")
+    private List<GradeAudit> gradeAudits;
 
 }
