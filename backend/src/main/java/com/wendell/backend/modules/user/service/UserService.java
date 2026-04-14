@@ -1,8 +1,10 @@
-package com.wendell.backend.modules.Users;
+package com.wendell.backend.modules.user.service;
 
-import com.wendell.backend.infra.database.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.wendell.backend.domain.User;
+import com.wendell.backend.modules.user.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +15,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Example methods to interact with the database
     public List<User> findAll() {
         return userRepository.findAll();
     }

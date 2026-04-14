@@ -1,4 +1,4 @@
-package com.wendell.backend.infra.database.entities;
+package com.wendell.backend.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,27 +10,29 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 @Data
-@Table(name = "student")
-public class Student {
+@Table(name = "evaluation")
+public class Evaluation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+    private BigDecimal weight;
 
     @ManyToOne
-    @JoinColumn(name = "classroom_id")
-    private Classroom classroom;
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "evaluation")
     private List<Grade> grades;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "evaluation")
     private List<GradeAudit> gradeAudits;
 
 }

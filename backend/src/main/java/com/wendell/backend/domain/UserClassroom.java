@@ -1,4 +1,4 @@
-package com.wendell.backend.infra.database.entities;
+package com.wendell.backend.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

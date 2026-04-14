@@ -1,11 +1,12 @@
-package com.wendell.backend.modules.Users;
+package com.wendell.backend.modules.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.wendell.backend.modules.Users.UserService;
+
+import com.wendell.backend.modules.user.service.UserService;
 
 @RestController
 @RequestMapping("user")
@@ -16,7 +17,6 @@ public class UserController {
 
     @PostMapping("path")
     public String postMethodName(@RequestBody String entity) {
-        //TODO: process POST request
 
         return entity;
     }
