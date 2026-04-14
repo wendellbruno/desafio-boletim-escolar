@@ -1,0 +1,71 @@
+CREATE TABLE usuario (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  login VARCHAR(255) NOT NULL,
+  senha VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE turma (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE aluno (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  turma_id BIGINT,
+  CONSTRAINT fk_aluno_turma FOREIGN KEY (turma_id) REFERENCES turma(id)
+);
+
+CREATE TABLE disciplina (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE avaliacao (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  peso DECIMAL(10,2) NOT NULL,
+  disciplina_id BIGINT,
+  CONSTRAINT fk_avaliacao_disciplina FOREIGN KEY (disciplina_id) REFERENCES disciplina(id)
+);
+
+
+CREATE TABLE nota (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  aluno_id BIGINT,
+  avaliacao_id BIGINT,
+  valor DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_nota_aluno FOREIGN KEY (aluno_id) REFERENCES aluno(id),
+  CONSTRAINT fk_nota_avaliacao FOREIGN KEY (avaliacao_id) REFERENCES avaliacao(id)
+);
+
+ALTER TABLE nota
+ADD CONSTRAINT unique_aluno_avaliacao
+UNIQUE (aluno_id, avaliacao_id);
+
+CREATE TABLE usuario_r_turma (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id BIGINT,
+  turma_id BIGINT,
+  ativo BOOLEAN NOT NULL,
+  CONSTRAINT fk_usuario_turma_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+  CONSTRAINT fk_usuario_turma_turma FOREIGN KEY (turma_id) REFERENCES turma(id)
+);
+
+CREATE TABLE auditoria_nota (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  aluno_id BIGINT,
+  avaliacao_id BIGINT,
+  alterado BIGINT,
+  valor_antigo DECIMAL(10,2) NOT NULL,
+  valor_novo DECIMAL(10,2) NOT NULL,
+  alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_auditoria_aluno FOREIGN KEY (aluno_id) REFERENCES aluno(id),
+  CONSTRAINT fk_auditoria_avaliacao FOREIGN KEY (avaliacao_id) REFERENCES avaliacao(id),
+  CONSTRAINT fk_auditoria_usuario FOREIGN KEY (alterado) REFERENCES usuario(id)
+);
+
+CREATE TRIGGER trg_auditoria_nota
+AFTER UPDATE ON nota
+FOR EACH ROW
+CALL "AuditoriaNotaTrigger";
