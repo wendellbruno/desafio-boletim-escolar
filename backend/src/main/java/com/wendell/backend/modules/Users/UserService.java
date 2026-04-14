@@ -1,4 +1,4 @@
-package com.wendell.backend.modules.user;
+package com.wendell.backend.modules.Users;
 
 import com.wendell.backend.infra.database.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
