@@ -42,18 +42,25 @@ INSERT INTO grade (student_id, evaluation_id, grade_value) VALUES
 
 INSERT INTO user_classroom (user_id, classroom_id, active) VALUES
 (1, 1, TRUE),
+(1, 3, TRUE),
+(2, 1, TRUE),
 (2, 2, TRUE),
 (3, 3, TRUE),
-(4, 4, FALSE),
-(5, 5, TRUE);
+(3, 5, TRUE),
+(4, 4, TRUE),
+(4, 2, TRUE),
+(5, 5, TRUE),
+(5, 4, TRUE);
 
 INSERT INTO USER_DISCIPLINE_CLASSROOM (discipline_id, classroom_id, user_id, active) VALUES
 (1, 1, 2, TRUE),
 (2, 2, 2,TRUE),
 (3, 3, 1, TRUE),
-(4, 4, 3, FALSE),
+(2, 3, 1, TRUE),
+(4, 4, 3, TRUE),
 (2, 1, 3, TRUE),
-(5, 5, 4,TRUE);
+(5, 5, 4,TRUE),
+(3, 1, 4,TRUE);
 
 -- Vai ser preenchido pela triggers
 INSERT INTO grade_audit

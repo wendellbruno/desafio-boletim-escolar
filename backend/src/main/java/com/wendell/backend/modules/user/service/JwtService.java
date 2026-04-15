@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -60,12 +61,12 @@ public class JwtService {
         return getClaims(token).get("userId", Long.class);
     }
 
-    public List<?> getClassrooms(String token) {
-        return getClaims(token).get("classrooms", List.class);
+    public List<Long> getClassrooms(String token) {
+        return convertToLongList(getClaims(token).get("classrooms", List.class));
     }
 
-    public List<?> getDisciplines(String token) {
-        return getClaims(token).get("disciplines", List.class);
+    public List<Long> getDisciplines(String token) {
+        return convertToLongList(getClaims(token).get("disciplines", List.class));
     }
 
     public boolean validateToken(String token) {
@@ -75,5 +76,15 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private List<Long> convertToLongList(List<?> values) {
+        if (values == null) {
+            return List.of();
+        }
+
+        return values.stream()
+                .map(value -> Long.valueOf(String.valueOf(value)))
+                .collect(Collectors.toList());
     }
 }

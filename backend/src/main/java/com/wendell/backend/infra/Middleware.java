@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wendell.backend.common.dto.AuthenticatedUserDto;
 import com.wendell.backend.common.dto.ExceptionDTO;
 import com.wendell.backend.modules.user.service.JwtService;
 
@@ -55,8 +56,15 @@ public class Middleware extends OncePerRequestFilter {
         }
 
         String username = tokenService.getUsernameFromToken(token);
+        Long userId = tokenService.getUserIdFromToken(token);
+        List<Long> classrooms = tokenService.getClassrooms(token);
+        List<Long> disciplines = tokenService.getDisciplines(token);
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null,
                 List.of());
+
+        //Seta os dados do usuario extraidos no contexto da requisição        
+        authentication.setDetails(new AuthenticatedUserDto(username, userId, classrooms, disciplines));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wendell.backend.common.security.AuthenticatedUserValidator;
 import com.wendell.backend.modules.classroom.dto.UserDisciplineClassRoomListResponseDto;
 import com.wendell.backend.modules.classroom.dto.UserClassRoomListResponseDto;
 import com.wendell.backend.modules.classroom.repository.UserDisciplineClassRoomRepository;
@@ -19,11 +20,17 @@ public class ClassRoomService {
     @Autowired
     private UserDisciplineClassRoomRepository userDisciplineClassRoomRepository;
 
+    @Autowired
+    private AuthenticatedUserValidator authenticatedUserValidator;
+
     public List<UserClassRoomListResponseDto> listAvailableClassroomsByUserId(Long userId) {
+        authenticatedUserValidator.validateUserId(userId);
         return userclassRoomRepository.findActiveClassroomsByUserId(userId);
     }
 
-    public List<UserDisciplineClassRoomListResponseDto> listAvailableDisciplineByClassIDAndByUserId(Long classroomId, Long UserId) {
-        return userDisciplineClassRoomRepository.findDisciplinesByClassroomIdAndUserId(classroomId, UserId);
+    public List<UserDisciplineClassRoomListResponseDto> listAvailableDisciplineByClassIDAndByUserId(Long classroomId,
+            Long userId) {
+        authenticatedUserValidator.validateClassroomId(classroomId);
+        return userDisciplineClassRoomRepository.findDisciplinesByClassroomIdAndUserId(classroomId, userId);
     }
 }
