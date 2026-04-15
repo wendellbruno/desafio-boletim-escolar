@@ -1,9 +1,9 @@
 INSERT INTO users (username, password) VALUES
-('admin', '123'),
-('joao', '123'),
-('maria', '123'),
-('ana', '123'),
-('carlos', '123');
+('admin', '123456'),
+('joao', '123456'),
+('maria', '123456'),
+('ana', '123456'),
+('carlos', '123456');
 
 INSERT INTO classroom (name) VALUES
 ('Classe A'),

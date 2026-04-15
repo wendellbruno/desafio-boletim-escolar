@@ -27,4 +27,7 @@ public class User {
 
     @OneToMany(mappedBy = "modifiedBy")
     private List<GradeAudit> gradeAudits;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserDisciplineClassRoom> userDisciplineClassRooms;
 }
