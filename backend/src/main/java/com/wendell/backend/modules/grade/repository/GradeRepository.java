@@ -1,0 +1,40 @@
+package com.wendell.backend.modules.grade.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.wendell.backend.domain.Grade;
+import com.wendell.backend.modules.grade.dto.GradeListingResponseDto;
+
+@Repository
+public interface GradeRepository extends JpaRepository<Grade, Long> {
+
+    @Query("""
+            SELECT new com.wendell.backend.modules.grade.dto.GradeListingResponseDto(
+                    s.id,
+                    s.name,
+                    c.id,
+                    c.name,
+                    d.id,
+                    d.name,
+                    e.id,
+                    e.name,
+                    e.weight,
+                    g.grade_value
+            )
+            FROM Grade g
+            JOIN g.student s
+            JOIN s.classroom c
+            JOIN g.evaluation e
+            JOIN e.discipline d
+            WHERE (:classroomId IS NULL OR c.id = :classroomId)
+              AND (:disciplineId IS NULL OR d.id = :disciplineId)
+            """)
+    List<GradeListingResponseDto> findAllByClassroomIdAndDisciplineId(
+            @Param("classroomId") Long classroomId,
+            @Param("disciplineId") Long disciplineId);
+}

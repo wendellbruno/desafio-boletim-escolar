@@ -26,7 +26,9 @@ CREATE TABLE EVALUATION (
   name VARCHAR(255) NOT NULL,
   weight DECIMAL(10,2) NOT NULL,
   discipline_id BIGINT,
-  CONSTRAINT fk_evaluation_discipline FOREIGN KEY (discipline_id) REFERENCES discipline(id)
+  classroom_id BIGINT,
+  CONSTRAINT fk_evaluation_discipline FOREIGN KEY (discipline_id) REFERENCES discipline(id),
+  CONSTRAINT fk_evaluation_classrom FOREIGN KEY (classroom_id) REFERENCES classroom(id)
 );
 
 
