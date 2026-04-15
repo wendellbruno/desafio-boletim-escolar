@@ -12,8 +12,8 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "subject")
-public class Subject {
+@Table(name = "discipline")
+public class Discipline {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Subject {
 
     private String name;
 
-    @OneToMany(mappedBy = "subject")
+    @OneToMany(mappedBy = "discipline")
     private List<Evaluation> evaluations;
 
 }

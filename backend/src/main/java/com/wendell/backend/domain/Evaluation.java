@@ -26,8 +26,8 @@ public class Evaluation {
     private BigDecimal weight;
 
     @ManyToOne
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
+    @JoinColumn(name = "discipline_id")
+    private Discipline discipline;
 
     @OneToMany(mappedBy = "evaluation")
     private List<Grade> grades;

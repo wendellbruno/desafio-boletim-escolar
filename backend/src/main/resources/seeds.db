@@ -22,8 +22,8 @@ INSERT INTO student (name, classroom_id) VALUES
 ('Julia', 4),
 ('Fernanda', 5);
 
--- SUBJECT
-INSERT INTO subject (name) VALUES
+-- discipline
+INSERT INTO discipline (name) VALUES
 ('Matematica'),
 ('POrtugues'),
 ('Historia'),
@@ -31,7 +31,7 @@ INSERT INTO subject (name) VALUES
 ('Fisica');
 
 -- EVALUATION
-INSERT INTO evaluation (name, weight, subject_id) VALUES
+INSERT INTO evaluation (name, weight, discipline_id) VALUES
 ('Test 1', 2.0, 1),
 ('Test 2', 3.0, 2),
 ('Trabalho', 1.5, 3),
