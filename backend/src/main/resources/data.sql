@@ -1,12 +1,10 @@
--- USER
-INSERT INTO user (username, password) VALUES
+INSERT INTO users (username, password) VALUES
 ('admin', '123'),
 ('joao', '123'),
 ('maria', '123'),
 ('ana', '123'),
 ('carlos', '123');
 
--- CLASSROOM
 INSERT INTO classroom (name) VALUES
 ('Classe A'),
 ('Classe B'),
@@ -14,7 +12,6 @@ INSERT INTO classroom (name) VALUES
 ('Classe D'),
 ('Classe E');
 
--- STUDENT
 INSERT INTO student (name, classroom_id) VALUES
 ('Pedro', 1),
 ('Lucas', 2),
@@ -22,7 +19,6 @@ INSERT INTO student (name, classroom_id) VALUES
 ('Julia', 4),
 ('Fernanda', 5);
 
--- discipline
 INSERT INTO discipline (name) VALUES
 ('Matematica'),
 ('POrtugues'),
@@ -30,7 +26,6 @@ INSERT INTO discipline (name) VALUES
 ('Geografia'),
 ('Fisica');
 
--- EVALUATION
 INSERT INTO evaluation (name, weight, discipline_id) VALUES
 ('Test 1', 2.0, 1),
 ('Test 2', 3.0, 2),
@@ -38,15 +33,13 @@ INSERT INTO evaluation (name, weight, discipline_id) VALUES
 ('Seminario', 1.0, 4),
 ('Projeto', 2.5, 5);
 
--- GRADE
-INSERT INTO grade (student_id, evaluation_id, value) VALUES
+INSERT INTO grade (student_id, evaluation_id, grade_value) VALUES
 (1, 1, 7.5),
 (2, 2, 8.0),
 (3, 3, 6.5),
 (4, 4, 9.0),
 (5, 5, 7.0);
 
--- USER_CLASSROOM
 INSERT INTO user_classroom (user_id, classroom_id, active) VALUES
 (1, 1, TRUE),
 (2, 2, TRUE),
@@ -54,7 +47,15 @@ INSERT INTO user_classroom (user_id, classroom_id, active) VALUES
 (4, 4, FALSE),
 (5, 5, TRUE);
 
--- GRADE_AUDIT (optional - normally trigger fills)
+INSERT INTO USER_DISCIPLINE_CLASSROOM (discipline_id, classroom_id, user_id, active) VALUES
+(1, 1, 2, TRUE),
+(2, 2, 2,TRUE),
+(3, 3, 1, TRUE),
+(4, 4, 3, FALSE),
+(2, 1, 3, TRUE),
+(5, 5, 4,TRUE);
+
+-- Vai ser preenchido pela triggers
 INSERT INTO grade_audit
 (student_id, evaluation_id, modified_by, old_value, new_value, modification_date) VALUES
 (1, 1, 1, 6.0, 7.5, CURRENT_TIMESTAMP),

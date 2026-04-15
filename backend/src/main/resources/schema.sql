@@ -1,4 +1,4 @@
-CREATE TABLE USERS (
+CREATE TABLE users (
   id BIGINT AUTO_INCREMENT  PRIMARY KEY,
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL
@@ -34,7 +34,7 @@ CREATE TABLE GRADE (
   id BIGINT AUTO_INCREMENT  PRIMARY KEY,
   student_id BIGINT,
   evaluation_id BIGINT,
-  value DECIMAL(10,2) NOT NULL,
+  grade_value DECIMAL(10,2) NOT NULL,
   CONSTRAINT fk_grade_student FOREIGN KEY (student_id) REFERENCES student(id),
   CONSTRAINT fk_grade_evaluation FOREIGN KEY (evaluation_id) REFERENCES evaluation(id)
 );
@@ -53,14 +53,14 @@ CREATE TABLE USER_CLASSROOM (
 );
 
 CREATE TABLE  USER_DISCIPLINE_CLASSROOM (
-  id BIGINT IDENTITY PRIMARY KEY,
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
   discipline_id BIGINT,
   classroom_id BIGINT,
   user_id BIGINT,
   active BOOLEAN NOT NULL,
   CONSTRAINT fk_USER_DISCIPLINE_CLASSROOM_discipline FOREIGN KEY (discipline_id) REFERENCES discipline(id),
   CONSTRAINT fk_USER_DISCIPLINE_CLASSROOM_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id),
-  CONSTRAINT fk_USER_DISCIPLINE_CLASSROOM_classroom FOREIGN KEY (user_id) REFERENCES USERS(id)
+  CONSTRAINT fk_USER_DISCIPLINE_CLASSROOM_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE GRADE_AUDIT (
@@ -78,7 +78,7 @@ CREATE TABLE GRADE_AUDIT (
   CONSTRAINT fk_audit_user FOREIGN KEY (modified_by) REFERENCES users(id)
 );
 
-CREATE TRIGGER trg_auditoria_nota
-AFTER UPDATE ON grade
-FOR EACH ROW
-CALL "AuditoriaNotaTrigger";
+--CREATE TRIGGER trg_auditoria_nota
+--AFTER UPDATE ON grade
+--FOR EACH ROW
+--CALL "AuditoriaNotaTrigger";
