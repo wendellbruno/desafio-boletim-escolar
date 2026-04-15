@@ -51,7 +51,8 @@ public class ClassRoomController {
             @ApiResponse(responseCode = "200", description = "Disciplinas encontradas", content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = UserDisciplineClassRoomListResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Usuario ou sala nao encontrados", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Usuario ou sala nao encontrados", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Usuario nao possui acesso a esta sala ", content = @Content)
     })
     public List<UserDisciplineClassRoomListResponseDto> listAvailableDisciplinesClassrooms(
             @Parameter(description = "ID do usuario", required = true, example = "1")
