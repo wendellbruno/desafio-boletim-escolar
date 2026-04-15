@@ -20,7 +20,7 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal value;
+    private BigDecimal grade_value;
 
     @ManyToOne
     @JoinColumn(name = "student_id")
