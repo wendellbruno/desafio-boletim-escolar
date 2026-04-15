@@ -1,5 +1,6 @@
 package com.wendell.backend.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,10 +30,19 @@ public class GradeAudit {
     private Evaluation evaluation;
 
     @ManyToOne
+    @JoinColumn(name = "discipline_id")
+    private Discipline discipline;
+
+    @ManyToOne
     @JoinColumn(name = "modified_by")
     private User modifiedBy;
 
+    @Column(name = "old_value")
     private BigDecimal oldValue;
+
+    @Column(name = "new_value")
     private BigDecimal newValue;
+
+    @Column(name = "modification_date")
     private LocalDateTime modificationDate;
 }

@@ -20,5 +20,9 @@ public class UserDisciplineClassRoom {
     @JoinColumn(name = "classroom_id")
     private Classroom classroom;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     private Boolean active;
 }
