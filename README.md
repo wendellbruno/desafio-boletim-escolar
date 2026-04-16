@@ -104,8 +104,7 @@ Fluxo da tela Home:
 Video demonstrativo do frontend:
 
 
-https://github.com/user-attachments/assets/c184c692-7915-4cc5-9b06-c91b53ee11cb
-
+https://github.com/user-attachments/assets/a9cd6cfa-dad8-48fd-9de0-fd963b0272bb
 
 ## Regras de Negocio
 
