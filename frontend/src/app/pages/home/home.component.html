@@ -42,7 +42,7 @@
         <h2>Grid de Notas</h2>
         <div class="panel__actions">
           <button type="button" class="secondary-button" [disabled]="!rows.length" (click)="openLaunchModal()">
-            Lancar Nota
+            Lançar Nota
           </button>
           <button type="button" class="primary-button" [disabled]="isSaving || !rows.length" (click)="saveBatch()">
             {{ isSaving ? 'Salvando...' : 'Salvar em Lote' }}
