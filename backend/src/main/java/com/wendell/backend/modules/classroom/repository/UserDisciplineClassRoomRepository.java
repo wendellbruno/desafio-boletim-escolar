@@ -13,7 +13,7 @@ import com.wendell.backend.modules.classroom.dto.UserDisciplineClassRoomListResp
 public interface UserDisciplineClassRoomRepository extends JpaRepository<UserDisciplineClassRoom, Long> {
 
     @Query("""
-                SELECT new com.wendell.backend.modules.classroom.dto.UserDisciplineClassRoomListResponseDto(
+                SELECT DISTINCT new com.wendell.backend.modules.classroom.dto.UserDisciplineClassRoomListResponseDto(
                     d.id,
                     d.name
                 )

@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Retorna notas por aluno, disciplina e sala")
 public record GradeListingResponseDto(
+        @Schema(description = "ID da nota", example = "1")
+        Long gradeId,
         @Schema(description = "ID do aluno", example = "1")
         Long studentId,
         @Schema(description = "Nome do aluno", example = "Pedro")

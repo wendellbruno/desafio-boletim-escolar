@@ -13,31 +13,31 @@ INSERT INTO classroom (name) VALUES
 ('Classe E');
 
 INSERT INTO student (name, classroom_id) VALUES
-('Pedro', 1),
-('Lucas', 1),
-('Marcos', 1),
-('Julia', 1),
-('Fernanda', 1),
-('Pedro', 2),
-('Lucas', 2),
-('Marcos', 2),
-('Julia', 2),
-('Fernanda', 2),
-('Pedro', 3),
-('Lucas', 3),
-('Marcos', 3),
-('Julia', 3),
-('Fernanda', 3),
-('Pedro', 4),
-('Lucas', 4),
-('Marcos', 4),
-('Julia', 4),
-('Fernanda', 4),
-('Pedro', 5),
-('Lucas', 5),
-('Marcos', 5),
-('Julia', 5),
-('Fernanda', 5);
+('Pedro Alves', 1),
+('Lucas Lima', 1),
+('Marcos Paulo', 1),
+('Julia Rocha', 1),
+('Fernanda Costa', 1),
+('Amanda Soares', 2),
+('Bruno Nogueira', 2),
+('Camila Farias', 2),
+('Diego Vieira', 2),
+('Elisa Campos', 2),
+('Fabio Tavares', 3),
+('Gabriela Freitas', 3),
+('Henrique Barros', 3),
+('Isabela Martins', 3),
+('Joao Pedro', 3),
+('Karen Ribeiro', 4),
+('Leandro Melo', 4),
+('Mariana Duarte', 4),
+('Nicolas Moura', 4),
+('Olivia Mendes', 4),
+('Paulo Cesar', 5),
+('Quenia Batista', 5),
+('Rafael Araujo', 5),
+('Sabrina Teixeira', 5),
+('Thiago Vinicius', 5);
 
 INSERT INTO discipline (name) VALUES
 ('Matematica'),
@@ -129,7 +129,6 @@ INSERT INTO evaluation (name, weight, discipline_id, classroom_id) VALUES
 ('Trabalho Fisica', 1.5, 5, 5);
 
 INSERT INTO grade (student_id, evaluation_id, grade_value) VALUES
--- Classe A (classroom_id=1) - 5 alunos x 15 avaliações (3 por disciplina)
 -- Pedro (1) - Matematica (1-3), Portugues (4-6), Historia (7-9), Geografia (10-12), Fisica (13-15)
 (1, 1, 7.5), (1, 2, 8.2), (1, 3, 6.8), (1, 4, 9.1), (1, 5, 7.3), (1, 6, 8.0), (1, 7, 7.4), (1, 8, 6.9), (1, 9, 8.5), (1, 10, 7.1), (1, 11, 8.3), (1, 12, 7.6), (1, 13, 8.1), (1, 14, 7.8), (1, 15, 8.4),
 -- Lucas (2) - Matematica (1-3), Portugues (4-6), Historia (7-9), Geografia (10-12), Fisica (13-15)
@@ -187,7 +186,10 @@ INSERT INTO grade (student_id, evaluation_id, grade_value) VALUES
 
 INSERT INTO user_classroom (user_id, classroom_id, active) VALUES
 (1, 1, TRUE),
+(1, 2, TRUE),
 (1, 3, TRUE),
+(1, 4, TRUE),
+(1, 5, TRUE),
 (2, 1, TRUE),
 (2, 2, TRUE),
 (3, 3, TRUE),
@@ -198,13 +200,49 @@ INSERT INTO user_classroom (user_id, classroom_id, active) VALUES
 (5, 4, TRUE);
 
 INSERT INTO USER_DISCIPLINE_CLASSROOM (discipline_id, classroom_id, user_id, active) VALUES
+-- Admin (user_id=1) possui acesso a todas as disciplinas em todas as turmas
+(1, 1, 1, TRUE),
+(2, 1, 1, TRUE),
+(3, 1, 1, TRUE),
+(4, 1, 1, TRUE),
+(5, 1, 1, TRUE),
+(1, 2, 1, TRUE),
+(2, 2, 1, TRUE),
+(3, 2, 1, TRUE),
+(4, 2, 1, TRUE),
+(5, 2, 1, TRUE),
+(1, 3, 1, TRUE),
+(2, 3, 1, TRUE),
+(3, 3, 1, TRUE),
+(4, 3, 1, TRUE),
+(5, 3, 1, TRUE),
+(1, 4, 1, TRUE),
+(2, 4, 1, TRUE),
+(3, 4, 1, TRUE),
+(4, 4, 1, TRUE),
+(5, 4, 1, TRUE),
+(1, 5, 1, TRUE),
+(2, 5, 1, TRUE),
+(3, 5, 1, TRUE),
+(4, 5, 1, TRUE),
+(5, 5, 1, TRUE),
+
+-- Outros usuarios
 (1, 1, 2, TRUE),
 (2, 2, 2,TRUE),
-(3, 3, 1, TRUE),
-(3, 3, 1, TRUE),
 (4, 4, 3, TRUE),
 (2, 1, 3, TRUE),
 (5, 5, 4,TRUE),
 (3, 1, 4,TRUE);
+
+INSERT INTO grade_audit (student_id, evaluation_id, discipline_id, modified_by, old_value, new_value, modification_date) VALUES
+(1, 1, 1, 1, 6.50, 7.50, TIMESTAMP '2026-04-10 09:10:00'),
+(1, 2, 1, 1, 7.40, 8.20, TIMESTAMP '2026-04-10 09:15:00'),
+(2, 1, 1, 1, 8.10, 8.70, TIMESTAMP '2026-04-11 10:00:00'),
+(2, 2, 1, 2, 7.10, 7.90, TIMESTAMP '2026-04-11 10:05:00'),
+(6, 19, 2, 1, 7.80, 8.50, TIMESTAMP '2026-04-12 14:20:00'),
+(6, 20, 2, 2, 7.10, 8.00, TIMESTAMP '2026-04-12 14:23:00'),
+(11, 37, 3, 1, 6.90, 7.50, TIMESTAMP '2026-04-13 08:40:00'),
+(11, 38, 3, 3, 6.50, 7.00, TIMESTAMP '2026-04-13 08:44:00');
 
 -- A tabela grade_audit será populada automaticamente pelos triggers quando notas forem inseridas ou atualizadas
