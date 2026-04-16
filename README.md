@@ -101,6 +101,10 @@ Fluxo da tela Home:
 5. salva alterações em lote
 6. abre modal de auditoria por aluno/disciplina
 
+Video demonstrativo do frontend:
+
+[Assistir video do frontend](<assets/Frontend - Google Chrome 2026-04-16 14-25-30.mp4>)
+
 ## Regras de Negocio
 
 Autenticação e autorização:
@@ -232,6 +236,7 @@ npm start
 Aplicacao: `http://localhost:4200`
 
 Observacao: o proxy do Angular (`frontend/proxy.conf.json`) redireciona `/api/*` para `http://localhost:8080`.
+
 
 ## Swagger (Documentacao da API)
 
