@@ -84,6 +84,12 @@
   margin-bottom: 0.75rem;
 }
 
+.panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .panel__top h2 {
   margin: 0;
   color: var(--text);
@@ -100,7 +106,7 @@
 
 .primary-button {
   color: #fff;
-  background: var(--primary);
+  background: var(--primary, #0f766e);
 }
 
 .primary-button:disabled {
@@ -166,10 +172,10 @@ td input {
 }
 
 .audit-button {
-  border: 1px solid #0f766e;
+  border: 1px solid var(--primary, #0f766e);
   border-radius: 0.45rem;
   background: #f0fdfa;
-  color: #0f766e;
+  color: var(--primary, #0f766e);
   font-weight: 700;
   width: 2.4rem;
   height: 2rem;
@@ -218,6 +224,10 @@ td input {
   padding: 1rem;
 }
 
+.modal--small {
+  width: min(32rem, 100%);
+}
+
 .modal__header {
   display: flex;
   justify-content: space-between;
@@ -241,6 +251,31 @@ td input {
 
 .modal__student {
   margin-top: 0;
+}
+
+.launch-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.launch-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.launch-form select,
+.launch-form input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  padding: 0.55rem 0.65rem;
+}
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .modal__table {

@@ -23,6 +23,11 @@ interface GradeRow {
   cells: Record<number, GradeCell>;
 }
 
+interface LaunchStudentOption {
+  id: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-home',
   standalone: false,
@@ -52,6 +57,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   isAuditModalOpen = false;
   selectedAuditStudentName = '';
   selectedAuditRows: GradeAuditEntry[] = [];
+  isLaunchModalOpen = false;
+  isLaunching = false;
+  launchError = '';
+  launchStudentId: number | null = null;
+  launchEvaluationId: number | null = null;
+  launchGradeValue: number | null = null;
+  launchStudents: LaunchStudentOption[] = [];
   private classroomsRequest?: Subscription;
   private disciplinesRequest?: Subscription;
   private gradesRequest?: Subscription;
@@ -260,6 +272,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!this.rows.length || !this.columns.length) {
       return;
     }
+    const userId = this.authState.currentUser?.id;
+    if (!userId) {
+      this.error = 'Usuario autenticado nao encontrado para salvar as notas.';
+      return;
+    }
 
     const payload = this.rows.flatMap((row) =>
       this.columns
@@ -276,7 +293,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isSaving = true;
 
     this.homeService
-      .saveGradesBatch(payload)
+      .saveGradesBatch(userId, payload)
       .pipe(
         finalize(() => {
           this.isSaving = false;
@@ -338,6 +355,84 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.auditError = '';
     this.auditRequest?.unsubscribe();
     this.isLoadingAudit = false;
+  }
+
+  openLaunchModal(): void {
+    this.launchStudents = this.rows.map((row) => ({ id: row.studentId, name: row.studentName }));
+    this.launchStudentId = this.launchStudents[0]?.id ?? null;
+    this.launchEvaluationId = this.columns[0]?.evaluationId ?? null;
+    this.launchGradeValue = null;
+    this.launchError = '';
+    this.isLaunchModalOpen = true;
+  }
+
+  closeLaunchModal(): void {
+    this.isLaunchModalOpen = false;
+    this.isLaunching = false;
+    this.launchError = '';
+  }
+
+  submitLaunchGrade(): void {
+    if (!this.launchStudentId || !this.launchEvaluationId || this.launchGradeValue === null) {
+      this.launchError = 'Preencha aluno, avaliacao e nota.';
+      return;
+    }
+
+    const value = Number(this.launchGradeValue);
+    if (Number.isNaN(value) || value < 0 || value > 10) {
+      this.launchError = 'A nota deve estar entre 0 e 10.';
+      return;
+    }
+    const userId = this.authState.currentUser?.id;
+    if (!userId) {
+      this.launchError = 'Usuario autenticado nao encontrado para lancamento da nota.';
+      return;
+    }
+
+    this.launchError = '';
+    this.isLaunching = true;
+
+    this.homeService
+      .saveGradesBatch(userId, [
+        {
+          studentId: this.launchStudentId,
+          evaluationId: this.launchEvaluationId,
+          gradeValue: Number(value.toFixed(2))
+        }
+      ])
+      .pipe(
+        finalize(() => {
+          this.isLaunching = false;
+          this.refreshView();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.success = 'Nota lancada com sucesso.';
+          this.closeLaunchModal();
+          this.onDisciplineChange(this.selectedDisciplineId);
+        },
+        error: (error: Error) => {
+          this.launchError = error.message || 'Nao foi possivel lancar a nota.';
+          this.refreshView();
+        }
+      });
+  }
+
+  onLaunchGradeValueChange(value: number | string | null): void {
+    if (value === null || value === '') {
+      this.launchGradeValue = null;
+      return;
+    }
+
+    const parsed = Number(value);
+    if (Number.isNaN(parsed)) {
+      this.launchGradeValue = null;
+      return;
+    }
+
+    const clamped = Math.max(0, Math.min(10, parsed));
+    this.launchGradeValue = Number(clamped.toFixed(2));
   }
 
   private buildGrid(grades: StudentGrade[]): void {

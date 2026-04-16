@@ -40,9 +40,14 @@
     <section class="panel">
       <div class="panel__top">
         <h2>Grid de Notas</h2>
-        <button type="button" class="primary-button" [disabled]="isSaving || !rows.length" (click)="saveBatch()">
-          {{ isSaving ? 'Salvando...' : 'Salvar em Lote' }}
-        </button>
+        <div class="panel__actions">
+          <button type="button" class="secondary-button" [disabled]="!rows.length" (click)="openLaunchModal()">
+            Lancar Nota
+          </button>
+          <button type="button" class="primary-button" [disabled]="isSaving || !rows.length" (click)="saveBatch()">
+            {{ isSaving ? 'Salvando...' : 'Salvar em Lote' }}
+          </button>
+        </div>
       </div>
 
       <p *ngIf="isLoadingClassrooms || isLoadingDisciplines || isLoadingGrades">Carregando dados...</p>
@@ -127,7 +132,7 @@
             <td>{{ audit.evaluationName }}</td>
             <td>{{ audit.oldValue }}</td>
             <td>{{ audit.newValue }}</td>
-            <td>{{ audit.modifiedByUsername }}</td>
+            <td>{{ audit.modifiedByUsername || 'sistema' }}</td>
             <td>{{ formatAuditDate(audit.modificationDate) }}</td>
           </tr>
         </tbody>
@@ -137,5 +142,56 @@
     <p *ngIf="!isLoadingAudit && !auditError && !selectedAuditRows.length">
       Nenhum registro de auditoria encontrado para este aluno/disciplina.
     </p>
+  </section>
+</div>
+
+<div class="modal-backdrop" *ngIf="isLaunchModalOpen" (click)="closeLaunchModal()">
+  <section class="modal modal--small" (click)="$event.stopPropagation()">
+    <header class="modal__header">
+      <h3>Lancar Nota</h3>
+      <button type="button" class="modal__close" (click)="closeLaunchModal()">Fechar</button>
+    </header>
+
+    <div class="launch-form">
+      <label>
+        Aluno
+        <select [(ngModel)]="launchStudentId">
+          <option [ngValue]="null" disabled>Selecione</option>
+          <option *ngFor="let student of launchStudents" [ngValue]="student.id">
+            {{ student.name }}
+          </option>
+        </select>
+      </label>
+
+      <label>
+        Avaliacao
+        <select [(ngModel)]="launchEvaluationId">
+          <option [ngValue]="null" disabled>Selecione</option>
+          <option *ngFor="let column of columns" [ngValue]="column.evaluationId">
+            {{ column.evaluationName }} (peso {{ column.evaluationWeight }})
+          </option>
+        </select>
+      </label>
+
+      <label>
+        Nota
+        <input
+          type="number"
+          min="0"
+          max="10"
+          step="0.1"
+          [(ngModel)]="launchGradeValue"
+          (ngModelChange)="onLaunchGradeValueChange($event)"
+        />
+      </label>
+    </div>
+
+    <p class="form-error" *ngIf="launchError">{{ launchError }}</p>
+
+    <div class="modal__footer">
+      <button type="button" class="primary-button" [disabled]="isLaunching" (click)="submitLaunchGrade()">
+        {{ isLaunching ? 'Lançando...' : 'Lancar' }}
+      </button>
+    </div>
   </section>
 </div>

@@ -44,11 +44,14 @@ export interface GradeAuditEntry {
 }
 
 interface UpdateGradeItemPayload {
-  gradeId: number;
+  gradeId?: number;
+  studentId?: number;
+  evaluationId?: number;
   gradeValue: number;
 }
 
 interface UpdateGradesPayload {
+  modifiedByUserId: number;
   grades: UpdateGradeItemPayload[];
 }
 
@@ -82,8 +85,8 @@ export class HomeService {
     });
   }
 
-  saveGradesBatch(grades: UpdateGradeItemPayload[]): Observable<void> {
-    const payload: UpdateGradesPayload = { grades };
+  saveGradesBatch(modifiedByUserId: number, grades: UpdateGradeItemPayload[]): Observable<void> {
+    const payload: UpdateGradesPayload = { modifiedByUserId, grades };
     return this.http.put<void>('/api/grades', payload);
   }
 
