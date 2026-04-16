@@ -65,7 +65,7 @@ public class AuditoriaNotaTrigger implements Trigger {
             ps.setLong(1, evaluationId);
             try (var rs = ps.executeQuery()) {
                 if (!rs.next()) {
-                    throw new SQLException("Avaliacao nao encontrada para auditoria: " + evaluationId);
+                    throw new SQLException("Avaliação nao encontrada para auditoria: " + evaluationId);
                 }
                 return rs.getLong(1);
             }
