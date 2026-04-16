@@ -1,0 +1,141 @@
+<section class="page">
+  <header class="page__header">
+    <h1>Painel de Lancamento de Notas</h1>
+    <p>Usuario logado: <strong>{{ currentUsername }}</strong></p>
+  </header>
+
+  <ng-container *ngIf="authState.user(); else anonymous">
+    <section class="status-card">
+      <div class="filters">
+        <label>
+          Turma
+          <select [(ngModel)]="selectedClassroomId" (ngModelChange)="onClassroomChange($event)">
+            <option [ngValue]="null" disabled>Selecione</option>
+            <option *ngFor="let classroom of classrooms" [ngValue]="classroom.id">
+              {{ classroom.name }}
+            </option>
+          </select>
+        </label>
+
+        <label>
+          Disciplina
+          <select
+            [(ngModel)]="selectedDisciplineId"
+            (ngModelChange)="onDisciplineChange($event)"
+            [disabled]="isLoadingDisciplines || !selectedClassroomId"
+          >
+            <option [ngValue]="null" disabled>Selecione</option>
+            <option *ngFor="let discipline of disciplines" [ngValue]="discipline.id">
+              {{ discipline.name }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="secondary-button" (click)="logout()">Sair</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__top">
+        <h2>Grid de Notas</h2>
+        <button type="button" class="primary-button" [disabled]="isSaving || !rows.length" (click)="saveBatch()">
+          {{ isSaving ? 'Salvando...' : 'Salvar em Lote' }}
+        </button>
+      </div>
+
+      <p *ngIf="isLoadingClassrooms || isLoadingDisciplines || isLoadingGrades">Carregando dados...</p>
+      <p class="form-error" *ngIf="error">{{ error }}</p>
+      <p class="form-success" *ngIf="success">{{ success }}</p>
+
+      <div class="table-wrapper" *ngIf="!isLoadingGrades && rows.length && columns.length">
+        <table>
+          <thead>
+            <tr>
+              <th>Aluno</th>
+              <th *ngFor="let column of columns">
+                {{ column.evaluationName }}
+                <span class="weight">(peso {{ column.evaluationWeight }})</span>
+              </th>
+              <th>Media Ponderada</th>
+              <th>Auditoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of rows">
+              <td class="student-name">{{ row.studentName }}</td>
+              <td *ngFor="let column of columns">
+                <input
+                  type="number"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  [ngModel]="row.cells[column.evaluationId]?.value"
+                  (ngModelChange)="updateCellValue(row, column.evaluationId, $event)"
+                />
+              </td>
+              <td class="average">{{ getAverage(row) }}</td>
+              <td>
+                <button type="button" class="audit-button" (click)="openAuditModal(row)" title="Ver auditoria">
+                  (!)
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p *ngIf="!isLoadingGrades && selectedDisciplineId && !rows.length">
+        Nao ha notas para os filtros selecionados.
+      </p>
+    </section>
+  </ng-container>
+
+  <ng-template #anonymous>
+    <section class="panel">
+      <p>Usuario nao autenticado.</p>
+      <a routerLink="/login" class="primary-link">Ir para Login</a>
+    </section>
+  </ng-template>
+</section>
+
+<div class="modal-backdrop" *ngIf="isAuditModalOpen" (click)="closeAuditModal()">
+  <section class="modal" (click)="$event.stopPropagation()">
+    <header class="modal__header">
+      <h3>Auditoria de Notas</h3>
+      <button type="button" class="modal__close" (click)="closeAuditModal()">Fechar</button>
+    </header>
+
+    <p class="modal__student">Aluno: <strong>{{ selectedAuditStudentName }}</strong></p>
+    <p *ngIf="isLoadingAudit">Carregando historico...</p>
+    <p class="form-error" *ngIf="auditError">{{ auditError }}</p>
+
+    <div class="modal__table" *ngIf="!isLoadingAudit && selectedAuditRows.length">
+      <table>
+        <thead>
+          <tr>
+            <th>Avaliacao</th>
+            <th>Valor Antigo</th>
+            <th>Valor Novo</th>
+            <th>Modificado Por</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let audit of selectedAuditRows">
+            <td>{{ audit.evaluationName }}</td>
+            <td>{{ audit.oldValue }}</td>
+            <td>{{ audit.newValue }}</td>
+            <td>{{ audit.modifiedByUsername }}</td>
+            <td>{{ formatAuditDate(audit.modificationDate) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p *ngIf="!isLoadingAudit && !auditError && !selectedAuditRows.length">
+      Nenhum registro de auditoria encontrado para este aluno/disciplina.
+    </p>
+  </section>
+</div>
