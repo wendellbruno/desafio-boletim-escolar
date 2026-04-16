@@ -374,7 +374,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   submitLaunchGrade(): void {
     if (!this.launchStudentId || !this.launchEvaluationId || this.launchGradeValue === null) {
-      this.launchError = 'Preencha aluno, avaliacao e nota.';
+      this.launchError = 'Preencha aluno, Avaliação e nota.';
       return;
     }
 
@@ -385,7 +385,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     const userId = this.authState.currentUser?.id;
     if (!userId) {
-      this.launchError = 'Usuario autenticado nao encontrado para lancamento da nota.';
+      this.launchError = 'Usuario autenticado nao encontrado para lançamento da nota.';
       return;
     }
 
@@ -413,7 +413,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.onDisciplineChange(this.selectedDisciplineId);
         },
         error: (error: Error) => {
-          this.launchError = error.message || 'Nao foi possivel lancar a nota.';
+          this.launchError = error.message || 'Nao foi possivel Lançar a nota.';
           this.refreshView();
         }
       });

@@ -120,7 +120,7 @@
       <table>
         <thead>
           <tr>
-            <th>Avaliacao</th>
+            <th>Avaliação</th>
             <th>Valor Antigo</th>
             <th>Valor Novo</th>
             <th>Modificado Por</th>
@@ -148,7 +148,7 @@
 <div class="modal-backdrop" *ngIf="isLaunchModalOpen" (click)="closeLaunchModal()">
   <section class="modal modal--small" (click)="$event.stopPropagation()">
     <header class="modal__header">
-      <h3>Lancar Nota</h3>
+      <h3>Lançar Nota</h3>
       <button type="button" class="modal__close" (click)="closeLaunchModal()">Fechar</button>
     </header>
 
@@ -164,7 +164,7 @@
       </label>
 
       <label>
-        Avaliacao
+        Avaliação
         <select [(ngModel)]="launchEvaluationId">
           <option [ngValue]="null" disabled>Selecione</option>
           <option *ngFor="let column of columns" [ngValue]="column.evaluationId">
@@ -190,7 +190,7 @@
 
     <div class="modal__footer">
       <button type="button" class="primary-button" [disabled]="isLaunching" (click)="submitLaunchGrade()">
-        {{ isLaunching ? 'Lançando...' : 'Lancar' }}
+        {{ isLaunching ? 'Lançando...' : 'Lançar' }}
       </button>
     </div>
   </section>

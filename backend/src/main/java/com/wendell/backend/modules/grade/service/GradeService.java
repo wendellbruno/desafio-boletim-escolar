@@ -129,7 +129,7 @@ public class GradeService {
 
                 String pairKey = item.studentId() + "-" + item.evaluationId();
                 if (!processedStudentEvaluationPairs.add(pairKey)) {
-                    throw new BadRequestException("Nao e permitido enviar o mesmo aluno/avaliacao mais de uma vez no mesmo lote");
+                    throw new BadRequestException("Nao e permitido enviar o mesmo aluno/Avaliação mais de uma vez no mesmo lote");
                 }
 
                 grade = gradeRepository.findByStudentIdAndEvaluationId(item.studentId(), item.evaluationId()).orElse(null);
@@ -139,7 +139,7 @@ public class GradeService {
                         throw new BadRequestException("Aluno nao encontrado para lancamento de nota");
                     }
                     if (!evaluationLookupRepository.existsById(item.evaluationId())) {
-                        throw new BadRequestException("Avaliacao nao encontrada para lancamento de nota");
+                        throw new BadRequestException("Avaliação nao encontrada para lancamento de nota");
                     }
 
                     grade = new Grade();

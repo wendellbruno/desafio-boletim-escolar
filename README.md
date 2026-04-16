@@ -97,7 +97,7 @@ Fluxo da tela Home:
 1. carrega turmas do usuario
 2. ao selecionar turma, carrega disciplinas permitidas
 3. ao selecionar disciplina, carrega grade de notas
-4. exibe grid editavel por aluno x avaliacao
+4. exibe grid editavel por aluno x Avaliação
 5. salva alterações em lote
 6. abre modal de auditoria por aluno/disciplina
 
@@ -121,7 +121,7 @@ Notas:
 - valor permitido: `0` a `10`
 - media exibida no front: media ponderada `sum(nota*peso) / sum(pesos)`
 - se nao houver notas validas para o aluno, a media exibida e `-`
-- pesos validos de avaliacao: `1` a `5` (considerados no calculo)
+- pesos validos de Avaliação: `1` a `5` (considerados no calculo)
 - salvamento em lote em um unico `PUT /grades`
 
 Integridade e upsert:

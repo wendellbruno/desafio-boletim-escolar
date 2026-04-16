@@ -29,7 +29,7 @@ export class LoginComponent {
     }
 
     if (!this.username.trim() || !this.password.trim()) {
-      this.error = 'Preencha usuario e senha.';
+      this.error = 'Preencha usuário e senha.';
       return;
     }
 
@@ -44,7 +44,7 @@ export class LoginComponent {
           this.router.navigate(['/home']);
         },
         error: (error: Error) => {
-          this.error = error.message || 'Nao foi possivel realizar o login.';
+          this.error = error.message || 'Não foi possível realizar o login.';
         }
       });
   }
