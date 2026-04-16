@@ -40,10 +40,19 @@ public interface GradeRepository extends JpaRepository<Grade, Long> {
             @Param("classroomId") Long classroomId,
             @Param("disciplineId") Long disciplineId);
 
+    java.util.Optional<Grade> findByStudentIdAndEvaluationId(Long studentId, Long evaluationId);
+
     @Query("""
             SELECT s.classroom.id
             FROM Student s
             WHERE s.id = :studentId
             """)
     Optional<Long> findClassroomIdByStudentId(@Param("studentId") Long studentId);
+
+    @Query("""
+            SELECT e.discipline.id
+            FROM Evaluation e
+            WHERE e.id = :evaluationId
+            """)
+    Optional<Long> findDisciplineIdByEvaluationId(@Param("evaluationId") Long evaluationId);
 }

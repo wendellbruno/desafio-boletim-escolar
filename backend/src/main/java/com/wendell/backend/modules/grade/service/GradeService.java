@@ -1,8 +1,6 @@
 package com.wendell.backend.modules.grade.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,8 +20,10 @@ import com.wendell.backend.modules.grade.dto.GradeListingResponseDto;
 import com.wendell.backend.modules.grade.dto.StudentGradeResponseDto;
 import com.wendell.backend.modules.grade.dto.UpdateGradeItemRequestDto;
 import com.wendell.backend.modules.grade.dto.UpdateGradesBatchRequestDto;
+import com.wendell.backend.modules.grade.repository.EvaluationLookupRepository;
 import com.wendell.backend.modules.grade.repository.GradeAuditRepository;
 import com.wendell.backend.modules.grade.repository.GradeRepository;
+import com.wendell.backend.modules.grade.repository.StudentLookupRepository;
 
 @Service
 public class GradeService {
@@ -33,6 +33,12 @@ public class GradeService {
 
     @Autowired
     private GradeAuditRepository gradeAuditRepository;
+
+    @Autowired
+    private StudentLookupRepository studentLookupRepository;
+
+    @Autowired
+    private EvaluationLookupRepository evaluationLookupRepository;
 
     @Autowired
     private AuthenticatedUserValidator authenticatedUserValidator;
@@ -86,31 +92,56 @@ public class GradeService {
 
     @Transactional
     public void updateGradesBatch(UpdateGradesBatchRequestDto request) {
-        Map<Long, BigDecimal> valuesByGradeId = new HashMap<>();
-
-        for (UpdateGradeItemRequestDto item : request.grades()) {
-            if (valuesByGradeId.containsKey(item.gradeId())) {
-                throw new BadRequestException("Nao e permitido enviar a mesma nota mais de uma vez no mesmo lote");
-            }
-            valuesByGradeId.put(item.gradeId(), item.gradeValue());
-        }
-
-        List<Long> gradeIds = new ArrayList<>(valuesByGradeId.keySet());
-        List<Grade> grades = gradeRepository.findAllById(gradeIds);
-
-        if (grades.size() != gradeIds.size()) {
-            throw new BadRequestException("Foram informadas notas inexistentes para atualizacao");
-        }
+        Set<Long> processedGradeIds = new HashSet<>();
+        Set<String> processedStudentEvaluationPairs = new HashSet<>();
+        List<Grade> gradesToSave = new ArrayList<>();
 
         Set<Long> classroomIds = new HashSet<>();
         Set<Long> disciplineIds = new HashSet<>();
 
-        for (Grade grade : grades) {
-            classroomIds.add(grade.getStudent().getClassroom().getId());
-            disciplineIds.add(grade.getEvaluation().getDiscipline().getId());
+        for (UpdateGradeItemRequestDto item : request.grades()) {
+            Grade grade;
 
-            BigDecimal value = valuesByGradeId.get(grade.getId());
-            grade.setGrade_value(value);
+            if (item.gradeId() != null) {
+                if (!processedGradeIds.add(item.gradeId())) {
+                    throw new BadRequestException("Nao e permitido enviar a mesma nota mais de uma vez no mesmo lote");
+                }
+
+                grade = gradeRepository.findById(item.gradeId())
+                        .orElseThrow(() -> new BadRequestException("Foram informadas notas inexistentes para atualizacao"));
+            } else {
+                if (item.studentId() == null || item.evaluationId() == null) {
+                    throw new BadRequestException("Quando gradeId nao for informado, studentId e evaluationId sao obrigatorios");
+                }
+
+                String pairKey = item.studentId() + "-" + item.evaluationId();
+                if (!processedStudentEvaluationPairs.add(pairKey)) {
+                    throw new BadRequestException("Nao e permitido enviar o mesmo aluno/avaliacao mais de uma vez no mesmo lote");
+                }
+
+                grade = gradeRepository.findByStudentIdAndEvaluationId(item.studentId(), item.evaluationId()).orElse(null);
+
+                if (grade == null) {
+                    if (!studentLookupRepository.existsById(item.studentId())) {
+                        throw new BadRequestException("Aluno nao encontrado para lancamento de nota");
+                    }
+                    if (!evaluationLookupRepository.existsById(item.evaluationId())) {
+                        throw new BadRequestException("Avaliacao nao encontrada para lancamento de nota");
+                    }
+
+                    grade = new Grade();
+                    grade.setStudent(studentLookupRepository.getReferenceById(item.studentId()));
+                    grade.setEvaluation(evaluationLookupRepository.getReferenceById(item.evaluationId()));
+                }
+            }
+
+            Long classroomId = grade.getStudent().getClassroom().getId();
+            Long disciplineId = grade.getEvaluation().getDiscipline().getId();
+
+            classroomIds.add(classroomId);
+            disciplineIds.add(disciplineId);
+            grade.setGrade_value(item.gradeValue());
+            gradesToSave.add(grade);
         }
 
         for (Long classroomId : classroomIds) {
@@ -121,6 +152,6 @@ public class GradeService {
             authenticatedUserValidator.validateDisciplineId(disciplineId);
         }
 
-        gradeRepository.saveAll(grades);
+        gradeRepository.saveAll(gradesToSave);
     }
 }
