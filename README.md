@@ -103,7 +103,9 @@ Fluxo da tela Home:
 
 Video demonstrativo do frontend:
 
-[Assistir video do frontend](<assets/Frontend - Google Chrome 2026-04-16 14-25-30.mp4>)
+
+https://github.com/user-attachments/assets/c184c692-7915-4cc5-9b06-c91b53ee11cb
+
 
 ## Regras de Negocio
 
