@@ -30,6 +30,7 @@ public class ClassRoomService {
 
     public List<UserDisciplineClassRoomListResponseDto> listAvailableDisciplineByClassIDAndByUserId(Long classroomId,
             Long userId) {
+        authenticatedUserValidator.validateUserId(userId);
         authenticatedUserValidator.validateClassroomId(classroomId);
         return userDisciplineClassRoomRepository.findDisciplinesByClassroomIdAndUserId(classroomId, userId);
     }

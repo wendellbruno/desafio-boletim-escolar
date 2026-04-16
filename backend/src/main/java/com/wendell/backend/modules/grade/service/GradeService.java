@@ -6,10 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.sql.Statement;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.Session;
 
 import com.wendell.backend.common.exception.BadRequestException;
 import com.wendell.backend.common.security.AuthenticatedUserValidator;
@@ -42,6 +46,9 @@ public class GradeService {
 
     @Autowired
     private AuthenticatedUserValidator authenticatedUserValidator;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<StudentGradeResponseDto> listGrades(Long classroomId, Long disciplineId) {
         if (classroomId != null) {
@@ -92,6 +99,12 @@ public class GradeService {
 
     @Transactional
     public void updateGradesBatch(UpdateGradesBatchRequestDto request) {
+        Long authenticatedUserId = authenticatedUserValidator.getAuthenticatedUser().userId();
+        if (!authenticatedUserId.equals(request.modifiedByUserId())) {
+            throw new BadRequestException("modifiedByUserId deve ser igual ao usuario autenticado");
+        }
+
+        setAuditUserContext(request.modifiedByUserId());
         Set<Long> processedGradeIds = new HashSet<>();
         Set<String> processedStudentEvaluationPairs = new HashSet<>();
         List<Grade> gradesToSave = new ArrayList<>();
@@ -152,6 +165,26 @@ public class GradeService {
             authenticatedUserValidator.validateDisciplineId(disciplineId);
         }
 
-        gradeRepository.saveAll(gradesToSave);
+        try {
+            gradeRepository.saveAllAndFlush(gradesToSave);
+        } finally {
+            clearAuditUserContext();
+        }
+    }
+
+    private void setAuditUserContext(Long modifiedByUserId) {
+        entityManager.unwrap(Session.class).doWork(conn -> {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute("SET @MODIFIED_BY " + modifiedByUserId);
+            }
+        });
+    }
+
+    private void clearAuditUserContext() {
+        entityManager.unwrap(Session.class).doWork(conn -> {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute("SET @MODIFIED_BY NULL");
+            }
+        });
     }
 }

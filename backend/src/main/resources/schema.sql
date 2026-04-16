@@ -70,7 +70,7 @@ CREATE TABLE GRADE_AUDIT (
   student_id BIGINT,
   evaluation_id BIGINT,
   discipline_id BIGINT,
-  modified_by BIGINT,
+  modified_by BIGINT NOT NULL,
   old_value DECIMAL(10,2) NOT NULL,
   new_value DECIMAL(10,2) NOT NULL,
   modification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -80,7 +80,14 @@ CREATE TABLE GRADE_AUDIT (
   CONSTRAINT fk_audit_user FOREIGN KEY (modified_by) REFERENCES users(id)
 );
 
---CREATE TRIGGER trg_auditoria_nota
---AFTER UPDATE ON grade
---FOR EACH ROW
---CALL "AuditoriaNotaTrigger";
+SET @MODIFIED_BY NULL;
+
+CREATE TRIGGER trg_auditoria_nota_insert
+AFTER INSERT ON grade
+FOR EACH ROW
+CALL "com.wendell.backend.infra.h2.AuditoriaNotaTrigger";
+
+CREATE TRIGGER trg_auditoria_nota_update
+AFTER UPDATE ON grade
+FOR EACH ROW
+CALL "com.wendell.backend.infra.h2.AuditoriaNotaTrigger";

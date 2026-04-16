@@ -29,6 +29,8 @@ public class UserService {
         User user = userRepository.findByUsername(loginRequest.username())
                 .orElseThrow(() -> new UnauthorizedException("Usuario ou senha invalidos"));
 
+        //Não tive tempo de trabalhar com hashs no password, pois não tenho metodo para criar usuario
+        //Validação ficou simples
         if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new UnauthorizedException("Usuario ou senha invalidos");
         }

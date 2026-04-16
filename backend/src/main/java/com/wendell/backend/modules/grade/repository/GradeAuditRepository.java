@@ -22,13 +22,13 @@ public interface GradeAuditRepository extends JpaRepository<GradeAudit, Long> {
                     e.name,
                     ga.oldValue,
                     ga.newValue,
-                    u.username,
+                    COALESCE(u.username, 'sistema'),
                     ga.modificationDate
             )
             FROM GradeAudit ga
             JOIN ga.student s
             JOIN ga.evaluation e
-            JOIN ga.modifiedBy u
+            LEFT JOIN ga.modifiedBy u
             WHERE s.id = :studentId
               AND ga.discipline.id = :disciplineId
             ORDER BY ga.modificationDate DESC
