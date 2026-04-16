@@ -1,6 +1,6 @@
 # Desafio Boletim Escolar
 
-Aplicacao full stack para gestao de notas escolares, com autenticacao JWT, controle de acesso por usuario/turma/disciplina, lancamento em lote e auditoria de alteracoes de nota.
+Aplição full stack para gestao de notas escolares, com autenticação JWT, controle de acesso por usuario/turma/disciplina, lancamento em lote e auditoria de alteracoes de nota.
 
 ## Sumario
 
@@ -52,19 +52,19 @@ Padrao em camadas por modulo:
 - `modules/*/service`: regras de negocio
 - `modules/*/repository`: acesso a dados com Spring Data JPA
 - `domain/*`: entidades JPA
-- `common/*`: DTOs de erro, exceptions e validacoes de usuario autenticado
+- `common/*`: DTOs de erro, exceptions e validações de usuario autenticado
 - `infra/*`: seguranca JWT, filtro middleware, OpenAPI e trigger H2
 
 Modulos principais:
 
-- `user`: login e emissao de JWT
+- `user`: login e emissão de JWT
 - `classroom`: listagem de turmas e disciplinas por usuario
-- `grade`: listagem de notas, atualizacao em lote e auditoria
+- `grade`: listagem de notas, atualização em lote e auditoria
 
-Seguranca:
+Segurança:
 
 - Spring Security stateless
-- `Middleware` valida Bearer Token e injeta dados do usuario no contexto
+- `Middleware` valida Bearer Token e injeta dados do usuario no contexto ( id, turmas, disciplinas )
 - `AuthenticatedUserValidator` protege acesso por:
   - `userId`
   - `classroomId`
@@ -74,17 +74,17 @@ Seguranca:
 
 O projeto aplica ACL em duas etapas:
 
-1. validacao do JWT: a cada requisicao protegida, o `Middleware` valida assinatura/expiracao do token e extrai `userId`, turmas e disciplinas permitidas.
-2. validacao de permissao da requisicao: no service, o `AuthenticatedUserValidator` compara os dados da chamada (usuario, turma, disciplina) com o escopo vindo do JWT; se nao houver permissao, retorna `401 Unauthorized`.
+1. validação do JWT: a cada requisição protegida, o `Middleware` valida assinatura/expiração do token e extrai `userId`, turmas e disciplinas permitidas ( gerados ao realizar o login e inseridos no token).
+2. validação de permissão da requisição: no service, o `AuthenticatedUserValidator` compara os dados da chamada (usuario, turma, disciplina) com o escopo vindo do JWT; se nao houver permissão, retorna `401 Unauthorized`.
 
 ## Arquitetura do Frontend
 
 Estrutura principal:
 
-- `src/app/pages/login`: autenticacao
+- `src/app/pages/login`: autenticação
 - `src/app/pages/home`: tela protegida com filtros e grid de notas
-- `src/app/core/state/auth-state.service.ts`: estado de sessao + persistencia em `localStorage`
-- `src/app/core/guards`: protecao de rotas (`authGuard` e `guestGuard`)
+- `src/app/core/state/auth-state.service.ts`: estado de sessão + persistencia em `localStorage`
+- `src/app/core/guards`: proteção de rotas (`authGuard` e `guestGuard`)
 - `src/app/core/infra/libs/http/auth.interceptor.ts`: injeta token JWT no header `Authorization`
 
 Rotas:
@@ -98,12 +98,12 @@ Fluxo da tela Home:
 2. ao selecionar turma, carrega disciplinas permitidas
 3. ao selecionar disciplina, carrega grade de notas
 4. exibe grid editavel por aluno x avaliacao
-5. salva alteracoes em lote
+5. salva alterações em lote
 6. abre modal de auditoria por aluno/disciplina
 
 ## Regras de Negocio
 
-Autenticacao e autorizacao:
+Autenticação e autorização:
 
 - login exige `username` e `password`
 - token JWT contem `userId`, turmas e disciplinas permitidas
@@ -120,14 +120,14 @@ Notas:
 
 Integridade e upsert:
 
-- existe restricao unica no banco para `GRADE(student_id, evaluation_id)`
-- no backend, quando nao ha `gradeId`, o sistema faz busca por `studentId + evaluationId`
+- existe restrição unica no banco para `GRADE(student_id, evaluation_id)`
+- no backend, quando não ha `gradeId`, o sistema faz busca por `studentId + evaluationId`
 - se existir registro, faz update
-- se nao existir, faz insert
+- se não existir, faz insert
 
 Auditoria:
 
-- trigger H2 registra alteracoes em `GRADE_AUDIT`
+- trigger H2 registra alterações em `GRADE_AUDIT`
 - registra valor antigo, novo valor, data e usuario que modificou
 - backend seta `@MODIFIED_BY` durante o `saveAllAndFlush`
 
@@ -150,12 +150,12 @@ Entidades principais:
 - `user_classroom`
 - `user_discipline_classroom`
 
-Relacoes importantes:
+Relações importantes:
 
 - aluno pertence a turma
-- avaliacao pertence a disciplina e turma
-- nota liga aluno + avaliacao
-- auditoria liga aluno + avaliacao + disciplina + usuario que alterou
+- avaliação pertence a disciplina e turma
+- nota liga aluno + avaliação
+- auditoria liga aluno + avaliação + disciplina + usuario que alterou
 
 Diagrama de classes/modelo:
 
